@@ -1,0 +1,22 @@
+:host {
+  font-family: var(--font-family);
+}
+
+::ng-deep {
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  .container {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex-grow: 1;
+    background-color: aliceblue;
+  }
+}

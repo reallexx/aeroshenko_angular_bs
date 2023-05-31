@@ -1,1 +1,14 @@
-<p>section works!</p>
+<div class="section">
+  <div class="flex align-items-center justify-content-between">
+    <div class="flex align-items-center">
+      <span class="p-input-icon-left mr-1">
+        <i class="pi pi-search"></i>
+        <input type="text" pInputText class="p-inputtext-sm" [(ngModel)]="searchString" />
+      </span>
+      <p-button label="Поиск" styleClass="p-button-sm" (onClick)="search()"></p-button>
+    </div>
+    <div class="flex align-items-center justify-content-end">
+      <p-button label="Добавить курс" styleClass="p-button-sm" icon="pi pi-plus"></p-button>
+    </div>
+  </div>
+</div>

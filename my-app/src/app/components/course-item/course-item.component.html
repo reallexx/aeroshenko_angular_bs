@@ -1,1 +1,19 @@
-<p>course-item works!</p>
+<div class="course mb-3">
+  <div class="flex align-items-center justify-content-between">
+    <h4 class="ml-2">{{ course.title }}</h4>
+    <div class="flex align-items-center justify-content-end info-text">
+      <i class="pi pi-clock mr-2"></i>
+      <span class="mr-2">{{ course.duration }}</span>
+      <i class="pi pi-calendar mr-2"></i>
+      <span class="mr-2">{{ course.creationDate }}</span>
+    </div>
+  </div>
+
+  <div class="flex align-items-center justify-content-between">
+    <div class="ml-2 mb-2" style="font-size: 0.9rem">{{ course.description }}</div>
+    <div class="flex align-items-center justify-content-end ml-4">
+      <p-button icon="pi pi-pencil mr-2" styleClass="p-button-text p-button-sm" (click)="editCourse(course)"></p-button>
+      <p-button icon="pi pi-trash" styleClass="p-button-text p-button-sm p-button-danger" (click)="deleteCourse(course.id)"></p-button>
+    </div>
+  </div>
+</div>
