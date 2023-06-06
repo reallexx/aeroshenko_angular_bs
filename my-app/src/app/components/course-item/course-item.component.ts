@@ -7,7 +7,7 @@ import { ICourse } from 'src/app/models/course';
   styleUrls: ['./course-item.component.scss'],
 })
 export class CourseItemComponent {
-  @Input() course!: ICourse;
+  @Input() course = {} as ICourse;
 
   @Output() edit = new EventEmitter<ICourse>();
   @Output() delete = new EventEmitter<number>();
