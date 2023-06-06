@@ -2,16 +2,22 @@
   <app-breadcrumbs></app-breadcrumbs>
 </div>
 <div class="mb-3">
-  <app-section></app-section>
+  <app-section (search)="searchCourse($event)"></app-section>
 </div>
 
-<app-course-item
-  *ngFor="let course of courses"
-  [course]="course"
-  (edit)="editCourse($event)"
-  (delete)="deleteCourse($event)"
-></app-course-item>
+<div *ngIf="courses.length > 0">
+  <app-course-item
+    *ngFor="let course of filteredCourses | orderBy : 'creationDate' : 'desc'"
+    [course]="course"
+    (edit)="editCourse($event)"
+    (delete)="deleteCourse($event)"
+  ></app-course-item>
 
-<div class="flex justify-content-center">
-  <p-button label="Загрузить ещe" styleClass="p-button-outlined p-button-secondary" (click)="loadMore()"></p-button>
+  <div class="flex justify-content-center">
+    <p-button label="Загрузить ещe" styleClass="p-button-outlined p-button-secondary" (click)="loadMore()"></p-button>
+  </div>
+</div>
+
+<div *ngIf="courses.length === 0">
+  <div class="flex justify-content-center align-items-center no-data my-3">Нет данных</div>
 </div>
