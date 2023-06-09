@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { ICourse } from '../models/course';
+import { ICourse } from '../../../models/course';
 
 @Directive({
   selector: '[courseBorder]',

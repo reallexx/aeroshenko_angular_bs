@@ -1,0 +1,18 @@
+<p-card class="login">
+  <h3 class="mt-0">Вход</h3>
+  <div class="p-fluid">
+    <div class="p-field">
+      <label>Email*</label>
+      <input type="text" pInputText placeholder="Например: user@domain.ru" [(ngModel)]="email" />
+    </div>
+    <div class="p-field py-3">
+      <label>Пароль*</label>
+      <input type="text" pInputText placeholder="Ваш пароль" [(ngModel)]="password" />
+    </div>
+
+    <div class="flex align-items-center justify-content-between">
+      <p-button label="Забыли пароль?" styleClass="p-button-link p-button-sm p-0"></p-button>
+      <p-button label="Войти" [disabled]="!valid" styleClass="p-button-sm" (click)="submit()"></p-button>
+    </div>
+  </div>
+</p-card>
