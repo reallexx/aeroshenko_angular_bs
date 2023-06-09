@@ -5,7 +5,7 @@
   <app-section (search)="searchCourse($event)"></app-section>
 </div>
 
-<div *ngIf="courses.length > 0">
+<div *ngIf="filteredCourses.length > 0">
   <app-course-item
     *ngFor="let course of filteredCourses | orderBy : 'creationDate' : 'desc'"
     [course]="course"
@@ -18,6 +18,6 @@
   </div>
 </div>
 
-<div *ngIf="courses.length === 0">
+<div *ngIf="filteredCourses.length === 0">
   <div class="flex justify-content-center align-items-center no-data my-3">Нет данных</div>
 </div>

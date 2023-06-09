@@ -14,9 +14,11 @@ import { CourseListComponent } from './components/course-list/course-list.compon
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LogoComponent } from './components/logo/logo.component';
-import { SharedPipeModule } from './pipes/shared-pipe.module';
 import { SectionComponent } from './components/section/section.component';
-import { SharedDirectiveModule } from './directives/shared-directive.module';
+import { CourseBorderDirective } from './directives/course-border.directive';
+import { DurationPipe } from './pipes/duration.pipe';
+import { FilterPipe } from './pipes/filter.pipe';
+import { OrderByPipe } from './pipes/order-by.pipe';
 
 registerLocaleData(localeRu);
 
@@ -30,18 +32,12 @@ registerLocaleData(localeRu);
     BreadcrumbsComponent,
     SectionComponent,
     CourseItemComponent,
+    CourseBorderDirective,
+    DurationPipe,
+    OrderByPipe,
+    FilterPipe,
   ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    AvatarModule,
-    ButtonModule,
-    InputTextModule,
-    SharedDirectiveModule,
-    SharedPipeModule,
-  ],
+  imports: [CommonModule, BrowserModule, BrowserAnimationsModule, FormsModule, AvatarModule, ButtonModule, InputTextModule],
   providers: [{ provide: LOCALE_ID, useValue: 'ru' }],
   bootstrap: [AppComponent],
 })

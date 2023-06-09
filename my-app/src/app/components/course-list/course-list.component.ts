@@ -6,6 +6,7 @@ import { FilterPipe } from '../../pipes/filter.pipe';
   selector: 'app-course-list',
   templateUrl: './course-list.component.html',
   styleUrls: ['./course-list.component.scss'],
+  providers: [FilterPipe],
 })
 export class CourseListComponent implements OnInit {
   courses: ICourse[] = [];
