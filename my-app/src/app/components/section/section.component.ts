@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-section',
@@ -8,7 +8,9 @@ import { Component } from '@angular/core';
 export class SectionComponent {
   searchString = '';
 
-  search() {
-    console.log('Searching for ' + this.searchString);
+  @Output() search = new EventEmitter<string>();
+
+  searchCourse() {
+    this.search.emit(this.searchString);
   }
 }

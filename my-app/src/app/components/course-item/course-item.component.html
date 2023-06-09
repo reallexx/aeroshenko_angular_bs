@@ -1,11 +1,15 @@
-<div class="course mb-3">
+<div class="course mb-3" [courseBorder]="course" [ngClass]="{ 'top-rated': course.topRated }">
   <div class="flex align-items-center justify-content-between">
-    <h4 class="ml-2">{{ course.title }}</h4>
+    <h4 class="flex align-items-center ml-2 m-3">
+      {{ course.name | uppercase }}
+      <i *ngIf="course.topRated" class="pi pi-star-fill ml-1 star"></i>
+    </h4>
+
     <div class="flex align-items-center justify-content-end info-text">
       <i class="pi pi-clock mr-2"></i>
-      <span class="mr-2">{{ course.duration }}</span>
+      <span class="mr-2">{{ course.duration | duration }}</span>
       <i class="pi pi-calendar mr-2"></i>
-      <span class="mr-2">{{ course.creationDate }}</span>
+      <span class="mr-2">{{ course.creationDate | date : 'dd MMMM yyyy года' }}</span>
     </div>
   </div>
 
