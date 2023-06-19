@@ -13,6 +13,9 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 export class CourseListComponent implements OnInit {
   courses: ICourse[] = [];
   filteredCourses: ICourse[] = [];
+  dialogHeader = '';
+  dialogVisible = false;
+  course: ICourse = {} as ICourse;
 
   constructor(private filterPipe: FilterPipe, private coursesService: CoursesService, private confirmationService: ConfirmationService) {}
 
@@ -21,8 +24,16 @@ export class CourseListComponent implements OnInit {
     this.filteredCourses = this.courses;
   }
 
+  addCourse() {
+    this.dialogHeader = 'Добавление курса';
+    this.dialogVisible = true;
+    this.course = {} as ICourse;
+  }
+
   editCourse(course: ICourse) {
-    console.log(course);
+    this.dialogHeader = 'Редактирование курса';
+    this.dialogVisible = true;
+    this.course = course;
   }
 
   deleteCourse(id: number) {
@@ -31,8 +42,8 @@ export class CourseListComponent implements OnInit {
       message: 'Вы уверены, что хотите удалить курс?',
       acceptLabel: 'Удалить',
       rejectLabel: 'Отмена',
-      acceptButtonStyleClass: 'p-button-danger',
-      rejectButtonStyleClass: 'p-button-secondary',
+      acceptButtonStyleClass: 'p-button-sm p-button-danger',
+      rejectButtonStyleClass: 'p-button-sm p-button-secondary p-button-outlined',
       acceptIcon: 'pi pi-trash',
       rejectIcon: 'pi pi-times',
       accept: () => {
