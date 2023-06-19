@@ -45,7 +45,7 @@ const directives = [CourseBorderDirective];
 const pipes = [DurationPipe, OrderByPipe, FilterPipe];
 
 @NgModule({
-  declarations: [CoursesComponent, ...components, ...directives, CourseEditComponent],
+  declarations: [CoursesComponent, ...components, ...directives],
   imports: [...modules, ...pipes, ...standaloneComponents],
   exports: [CoursesComponent],
   providers: [ConfirmationService],
