@@ -1,43 +1,18 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import { LOCALE_ID, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AvatarModule } from 'primeng/avatar';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
 import { AppComponent } from './app.component';
-import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
-import { CourseItemComponent } from './components/course-item/course-item.component';
-import { CourseListComponent } from './components/course-list/course-list.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { HeaderComponent } from './components/header/header.component';
-import { LogoComponent } from './components/logo/logo.component';
-import { SectionComponent } from './components/section/section.component';
-import { CourseBorderDirective } from './directives/course-border.directive';
-import { DurationPipe } from './pipes/duration.pipe';
-import { FilterPipe } from './pipes/filter.pipe';
-import { OrderByPipe } from './pipes/order-by.pipe';
+import { CoreModule } from './modules/core/core.module';
+import { CoursesModule } from './modules/courses/courses.module';
+import { LoginPageModule } from './modules/login-page/login-page.module';
 
 registerLocaleData(localeRu);
 
+const modules = [CommonModule, CoreModule, CoursesModule, LoginPageModule];
+
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    LogoComponent,
-    CourseListComponent,
-    BreadcrumbsComponent,
-    SectionComponent,
-    CourseItemComponent,
-    CourseBorderDirective,
-    DurationPipe,
-    OrderByPipe,
-    FilterPipe,
-  ],
-  imports: [CommonModule, BrowserModule, BrowserAnimationsModule, FormsModule, AvatarModule, ButtonModule, InputTextModule],
+  declarations: [AppComponent],
+  imports: [...modules],
   providers: [{ provide: LOCALE_ID, useValue: 'ru' }],
   bootstrap: [AppComponent],
 })

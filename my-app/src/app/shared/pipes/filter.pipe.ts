@@ -1,11 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ICourse } from 'src/app/models/course';
+
+interface Filterable {
+  [key: string]: string | number | Date | boolean | undefined;
+}
 
 @Pipe({
   name: 'filter',
+  standalone: true,
 })
 export class FilterPipe implements PipeTransform {
-  transform(array: ICourse[], field: keyof ICourse, value: string): ICourse[] {
+  transform<T extends Filterable>(array: T[], field: keyof T, value: string): T[] {
     if (!array || !array.length) {
       return [];
     }
@@ -19,6 +23,10 @@ export class FilterPipe implements PipeTransform {
         return fieldValue === Number(value);
       } else if (fieldValue instanceof Date) {
         return fieldValue.getTime() === new Date(value).getTime();
+      } else if (typeof fieldValue === 'boolean') {
+        return String(fieldValue).toLowerCase() === value.toLowerCase();
+      } else if (typeof fieldValue === 'undefined') {
+        return value.toLowerCase() === 'undefined';
       } else {
         return false;
       }

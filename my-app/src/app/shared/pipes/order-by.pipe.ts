@@ -1,11 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ICourse } from 'src/app/models/course';
+
+interface Sortable {
+  [key: string]: string | number | Date | boolean | undefined;
+}
 
 @Pipe({
   name: 'orderBy',
+  standalone: true,
 })
 export class OrderByPipe implements PipeTransform {
-  transform(array: ICourse[], field: keyof ICourse, order: 'asc' | 'desc' = 'asc'): ICourse[] {
+  transform<T extends Sortable>(array: T[], field: keyof T, order: 'asc' | 'desc' = 'asc'): T[] {
     if (!array || !array.length) {
       return [];
     }
@@ -21,8 +25,19 @@ export class OrderByPipe implements PipeTransform {
         result = fieldA - fieldB;
       } else if (fieldA instanceof Date && fieldB instanceof Date) {
         result = fieldA.getTime() - fieldB.getTime();
+      } else if (typeof fieldA === 'boolean' && typeof fieldB === 'boolean') {
+        result = fieldA === fieldB ? 0 : fieldA ? 1 : -1;
+      } else if (typeof fieldA === 'undefined' && typeof fieldB === 'undefined') {
+        result = 0;
+      } else if (typeof fieldA === 'undefined') {
+        result = order === 'asc' ? 1 : -1;
+      } else if (typeof fieldB === 'undefined') {
+        result = order === 'asc' ? -1 : 1;
       }
-      if (order === 'desc') result = -result;
+
+      if (order === 'desc') {
+        result = -result;
+      }
 
       return result;
     });
