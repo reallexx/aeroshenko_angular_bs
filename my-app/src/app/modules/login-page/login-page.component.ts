@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { ILogin } from 'src/app/models/user';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login-page',
@@ -7,16 +8,17 @@ import { ILogin } from 'src/app/models/user';
   styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent {
-  @Output() login = new EventEmitter<ILogin>();
-
   email = '';
   password = '';
+
+  constructor(private authService: AuthService, private router: Router) {}
 
   get valid() {
     return this.email.length > 0 && this.password.length > 0;
   }
 
-  submit() {
-    this.login.emit({ email: this.email, password: this.password });
+  login() {
+    this.authService.login(this.email, this.password);
+    this.router.navigate(['/courses']);
   }
 }

@@ -54,17 +54,17 @@ export class CoursesService {
   }
 
   createCourse(course: ICourse) {
-    const id = this.courses.reduce((max, course) => {
-      return course.id > max ? course.id : max;
-    }, 0);
-    +1;
+    const id =
+      this.courses.reduce((max, course) => {
+        return course.id > max ? course.id : max;
+      }, 0) + 1;
     const newCourse = { ...course, id };
     this.courses.push(newCourse);
   }
 
   getItemById(id: number) {
     const course = this.courses.find((c) => c.id === id);
-    return course;
+    return course || ({} as ICourse);
   }
 
   updateItem(course: ICourse) {
