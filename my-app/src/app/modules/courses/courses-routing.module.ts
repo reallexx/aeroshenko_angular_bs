@@ -1,22 +1,21 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { authGuard } from 'src/app/services/auth,guard';
+import { canActivate } from 'src/app/services/auth.guard';
 import { CourseEditComponent } from './components/course-edit/course-edit.component';
 import { CourseListComponent } from './components/course-list/course-list.component';
 import { CoursesComponent } from './courses.component';
 
 const routes: Routes = [
   {
-    path: 'courses',
+    path: '',
     component: CoursesComponent,
-    canActivate: [authGuard],
+    canActivate: [canActivate],
     children: [
       { path: '', component: CourseListComponent },
       { path: 'new', component: CourseEditComponent },
       { path: ':id', component: CourseEditComponent },
     ],
   },
-  { path: '', pathMatch: 'full', redirectTo: '/courses' },
 ];
 
 @NgModule({

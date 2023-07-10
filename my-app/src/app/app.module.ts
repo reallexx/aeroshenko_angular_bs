@@ -6,12 +6,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './modules/core/core.module';
-import { CoursesModule } from './modules/courses/courses.module';
 import { LoginPageModule } from './modules/login-page/login-page.module';
 
 registerLocaleData(localeRu);
 
-const modules = [CommonModule, BrowserModule, BrowserAnimationsModule, CoreModule, CoursesModule, LoginPageModule, AppRoutingModule];
+const modules = [CommonModule, BrowserModule, BrowserAnimationsModule, CoreModule, LoginPageModule, AppRoutingModule];
 
 @NgModule({
   declarations: [AppComponent],

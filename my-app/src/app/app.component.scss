@@ -19,4 +19,30 @@
     flex-grow: 1;
     background-color: aliceblue;
   }
+
+  .not-found-container {
+    background-color: white;
+    border-radius: 0.4rem;
+  }
+
+  .big-tag {
+    background-color: aliceblue;
+    color: #3b82f6;
+    border-radius: 50%;
+    width: 6rem;
+    height: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & i,
+    span {
+      font-size: 2rem;
+    }
+  }
+
+  .p-breadcrumb {
+    ul li.p-breadcrumb-chevron:last-child {
+      display: none;
+    }
+  }
 }
