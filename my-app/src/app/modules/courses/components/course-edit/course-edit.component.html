@@ -1,57 +1,65 @@
-<div class="formgrid grid p-fluid">
-  <div class="field col-9">
-    <label for="name">Наименование *</label>
-    <input id="name" [(ngModel)]="course.name" pInputText />
+<div class="grid">
+  <div class="col-6 col-offset-3">
+    <h4 class="mb-1">{{ caption }}</h4>
   </div>
 
-  <div class="field col-9">
-    <label for="description">Описание *</label>
-    <textarea
-      id="description"
-      [(ngModel)]="course.description"
-      pInputTextarea
-      [autoResize]="true"
-      class="ng-touched"
-      style="min-height: 6rem"
-    ></textarea>
-  </div>
-
-  <div class="col-12 p-0">
-    <div class="flex align-items-center">
+  <div class="col-6 col-offset-3">
+    <div class="formgrid grid p-fluid content py-2">
       <div class="field col-9">
-        <label for="duration">Продолжительность *</label>
-        <p-inputNumber id="duration" [(ngModel)]="course.duration" [showButtons]="true" [useGrouping]="false" [min]="0" [max]="60000">
-        </p-inputNumber>
+        <label for="name">Наименование *</label>
+        <input id="name" [(ngModel)]="course.name" pInputText />
       </div>
-      <div class="col-3" *ngIf="course.duration && course.duration <= 60000">
-        <div>
-          <div class="mr-2 pt-2 info-text">{{ course.duration | duration }}</div>
+
+      <div class="field col-9">
+        <label for="description">Описание *</label>
+        <textarea
+          id="description"
+          [(ngModel)]="course.description"
+          pInputTextarea
+          [autoResize]="true"
+          class="ng-touched"
+          style="min-height: 6rem"
+        ></textarea>
+      </div>
+
+      <div class="col-12 p-0">
+        <div class="flex align-items-center">
+          <div class="field col-9">
+            <label for="duration">Продолжительность *</label>
+            <p-inputNumber id="duration" [(ngModel)]="course.duration" [showButtons]="true" [useGrouping]="false" [min]="0" [max]="60000">
+            </p-inputNumber>
+          </div>
+          <div class="col-3" *ngIf="course.duration && course.duration <= 60000">
+            <div>
+              <div class="mr-2 pt-2 info-text">{{ course.duration | duration }}</div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <div class="field col-9">
+        <label for="creationDate">Дата *</label>
+        <p-calendar
+          id="creationDate"
+          [(ngModel)]="course.creationDate"
+          [showIcon]="true"
+          dateFormat="dd.mm.yy"
+          [firstDayOfWeek]="1"
+          appendTo="body"
+        ></p-calendar>
+      </div>
+
+      <div class="field col-9"><app-authors></app-authors></div>
     </div>
   </div>
 
-  <div class="field col-9">
-    <label for="creationDate">Дата *</label>
-    <p-calendar
-      id="creationDate"
-      [(ngModel)]="course.creationDate"
-      [showIcon]="true"
-      dateFormat="dd.mm.yy"
-      [firstDayOfWeek]="1"
-      appendTo="body"
-    ></p-calendar>
-  </div>
-
-  <div class="field col-9"><app-authors></app-authors></div>
-
-  <div class="col-12 flex justify-content-end gap-2">
+  <div class="col-6 col-offset-3 flex justify-content-end gap-2 pt-3">
     <p-button
       label="Отмена"
       styleClass="p-button-sm p-button-secondary p-button-outlined"
       icon="pi pi-times"
       (click)="cancelAction()"
     ></p-button>
-    <p-button label="Сохранить" styleClass="p-button-sm" icon="pi pi-check" (click)="saveCourse()"></p-button>
+    <p-button label="Сохранить" [disabled]="!valid" styleClass="p-button-sm" icon="pi pi-check" (click)="saveCourse()"></p-button>
   </div>
 </div>

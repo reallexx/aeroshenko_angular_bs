@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ICourse } from 'src/app/models/course';
+import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import { CoursesService } from 'src/app/services/courses.service';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 
@@ -13,27 +15,31 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 export class CourseListComponent implements OnInit {
   courses: ICourse[] = [];
   filteredCourses: ICourse[] = [];
-  dialogHeader = '';
-  dialogVisible = false;
-  course: ICourse = {} as ICourse;
 
-  constructor(private filterPipe: FilterPipe, private coursesService: CoursesService, private confirmationService: ConfirmationService) {}
+  constructor(
+    private filterPipe: FilterPipe,
+    private coursesService: CoursesService,
+    private confirmationService: ConfirmationService,
+    private breadcrumbsService: BreadcrumbsService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
+    this.breadcrumbsService.data = {
+      home: { label: 'Курсы' },
+      items: [],
+    };
+
     this.courses = this.coursesService.getList();
     this.filteredCourses = this.courses;
   }
 
   addCourse() {
-    this.dialogHeader = 'Добавление курса';
-    this.dialogVisible = true;
-    this.course = {} as ICourse;
+    this.router.navigate(['courses/new']);
   }
 
   editCourse(course: ICourse) {
-    this.dialogHeader = 'Редактирование курса';
-    this.dialogVisible = true;
-    this.course = course;
+    this.router.navigate(['courses', course.id]);
   }
 
   deleteCourse(id: number) {
