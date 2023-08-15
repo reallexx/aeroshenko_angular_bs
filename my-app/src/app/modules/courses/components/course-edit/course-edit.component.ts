@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ICourse } from 'src/app/models/course';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import { CoursesService } from 'src/app/services/courses.service';
+import { EventService } from 'src/app/services/event.service';
 
 @Component({
   selector: 'app-course-edit',
@@ -13,12 +14,14 @@ export class CourseEditComponent implements OnInit {
   course = {} as ICourse;
   caption = 'Добавление курса';
   mode = 'add';
+  courseId = undefined as unknown as number;
 
   constructor(
     private coursesService: CoursesService,
     private breadcrumbsService: BreadcrumbsService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private eventService: EventService,
   ) {}
 
   get valid() {
@@ -32,8 +35,12 @@ export class CourseEditComponent implements OnInit {
     if (id) {
       this.caption = 'Редактирование курса';
       this.mode = 'edit';
-      this.course = this.coursesService.getItemById(Number(id));
+      this.coursesService.getItemById(Number(id)).subscribe((data) => {
+        data.creationDate = new Date(data.creationDate);
+        this.course = data;
+      });
       breadcrumbLabel = this.course.name;
+      this.courseId = Number(id);
     }
 
     this.breadcrumbsService.data = {
@@ -47,14 +54,14 @@ export class CourseEditComponent implements OnInit {
   }
 
   saveCourse() {
-    if (!this.valid) {
-      return;
-    }
+    if (!this.valid) return;
+
+    const navigateToCourses = () => this.router.navigate(['/courses']);
+
     if (this.mode === 'add') {
-      this.coursesService.createCourse(this.course);
+      this.coursesService.createItem(this.course).subscribe(navigateToCourses);
     } else {
-      this.coursesService.updateItem(this.course);
+      this.coursesService.updateItem(this.courseId, this.course).subscribe(navigateToCourses);
     }
-    this.router.navigate(['/courses']);
   }
 }

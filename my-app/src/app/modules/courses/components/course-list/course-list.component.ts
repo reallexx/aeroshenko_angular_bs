@@ -4,6 +4,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ICourse } from 'src/app/models/course';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import { CoursesService } from 'src/app/services/courses.service';
+import { EventService } from 'src/app/services/event.service';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 
 @Component({
@@ -14,15 +15,23 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 })
 export class CourseListComponent implements OnInit {
   courses: ICourse[] = [];
-  filteredCourses: ICourse[] = [];
+  page = 1;
+  size = 5;
+  totalCount = 0;
+  searchString = '';
+  loading = false;
 
   constructor(
-    private filterPipe: FilterPipe,
     private coursesService: CoursesService,
     private confirmationService: ConfirmationService,
     private breadcrumbsService: BreadcrumbsService,
     private router: Router,
+    private eventService: EventService,
   ) {}
+
+  get showLoadMore() {
+    return this.courses.length < this.totalCount;
+  }
 
   ngOnInit(): void {
     this.breadcrumbsService.data = {
@@ -30,8 +39,33 @@ export class CourseListComponent implements OnInit {
       items: [],
     };
 
-    this.courses = this.coursesService.getList();
-    this.filteredCourses = this.courses;
+    this.getCourses();
+  }
+
+  getCourses({ search = false, loadMore = false } = {}) {
+    this.loading = true;
+
+    if (loadMore) {
+      this.page++;
+    }
+    if (search) {
+      this.page = 1;
+      this.courses = [];
+    }
+    const params = {
+      _page: this.page,
+      _limit: this.size,
+      _sort: 'creationDate',
+      _order: 'asc',
+      // name_like: searchString,
+      // description_like: searchString,
+      q: this.searchString,
+    };
+    this.coursesService.getList(params).subscribe((reaponse) => {
+      this.courses = this.courses.concat(reaponse.body as ICourse[]);
+      this.totalCount = Number(reaponse.headers.get('x-total-count'));
+      this.loading = false;
+    });
   }
 
   addCourse() {
@@ -53,20 +87,19 @@ export class CourseListComponent implements OnInit {
       acceptIcon: 'pi pi-trash',
       rejectIcon: 'pi pi-times',
       accept: () => {
-        this.coursesService.removeItem(id);
+        this.coursesService.removeItem(id).subscribe(() => {
+          this.eventService.clearFiltersEvent.emit();
+        });
       },
     });
   }
 
   loadMore() {
-    console.log('load more');
+    this.getCourses({ loadMore: true });
   }
 
   searchCourse(searchString: string) {
-    if (searchString === '') {
-      this.filteredCourses = this.courses;
-      return;
-    }
-    this.filteredCourses = this.filterPipe.transform(this.courses, 'name', searchString);
+    this.searchString = searchString;
+    this.getCourses({ search: true });
   }
 }
