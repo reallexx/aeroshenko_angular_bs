@@ -2,21 +2,23 @@
   <app-section (search)="searchCourse($event)" (add)="addCourse()"></app-section>
 </div>
 
-<div *ngIf="courses.length > 0">
-  <app-course-item
-    *ngFor="let course of courses"
-    [course]="course"
-    (edit)="editCourse($event)"
-    (delete)="deleteCourse($event)"
-  ></app-course-item>
+<div *ngIf="(courses$ | async) || [] as courses">
+  <div *ngIf="courses.length > 0">
+    <app-course-item
+      *ngFor="let course of courses"
+      [course]="course"
+      (edit)="editCourse($event)"
+      (delete)="deleteCourse($event)"
+    ></app-course-item>
 
-  <div class="flex justify-content-center" *ngIf="showLoadMore">
-    <p-button label="Загрузить ещe" styleClass="p-button-outlined p-button-secondary" (click)="loadMore()"></p-button>
+    <div class="flex justify-content-center" *ngIf="((totalCount$ | async) || 0) > courses.length">
+      <p-button label="Загрузить ещe" styleClass="p-button-outlined p-button-secondary" (click)="loadMore()"></p-button>
+    </div>
   </div>
-</div>
 
-<div *ngIf="courses.length === 0 && !loading">
-  <app-items-not-found></app-items-not-found>
+  <div *ngIf="courses.length === 0 && !loading">
+    <app-items-not-found></app-items-not-found>
+  </div>
 </div>
 
 <p-confirmDialog [breakpoints]="{ '960px': '75vw', '640px': '100vw' }" [style]="{ width: '50vw' }"> </p-confirmDialog>

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { BehaviorSubject, finalize, Subject, tap } from 'rxjs';
 import { ICourse } from 'src/app/models/course';
+import { IRequest } from 'src/app/models/request';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import { CoursesService } from 'src/app/services/courses.service';
 import { EventService } from 'src/app/services/event.service';
@@ -14,11 +16,18 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
   providers: [FilterPipe],
 })
 export class CourseListComponent implements OnInit {
-  courses: ICourse[] = [];
-  page = 1;
-  size = 5;
-  totalCount = 0;
-  searchString = '';
+  public courses$ = new Subject<ICourse[]>();
+  public totalCount$ = new BehaviorSubject<number>(0);
+
+  searchParams = {
+    _page: 1,
+    _limit: 5,
+    _sort: 'creationDate',
+    _order: 'asc',
+    // name_like: searchString,
+    // description_like: searchString,
+    // q: this.searchString,
+  };
   loading = false;
 
   constructor(
@@ -29,43 +38,24 @@ export class CourseListComponent implements OnInit {
     private eventService: EventService,
   ) {}
 
-  get showLoadMore() {
-    return this.courses.length < this.totalCount;
-  }
-
-  ngOnInit(): void {
+  ngOnInit() {
     this.breadcrumbsService.data = {
       home: { label: 'Курсы' },
       items: [],
     };
 
-    this.getCourses();
+    this.getCourses().subscribe();
   }
 
-  getCourses({ search = false, loadMore = false } = {}) {
+  getCourses(params: IRequest = this.searchParams) {
     this.loading = true;
-
-    if (loadMore) {
-      this.page++;
-    }
-    if (search) {
-      this.page = 1;
-      this.courses = [];
-    }
-    const params = {
-      _page: this.page,
-      _limit: this.size,
-      _sort: 'creationDate',
-      _order: 'asc',
-      // name_like: searchString,
-      // description_like: searchString,
-      q: this.searchString,
-    };
-    this.coursesService.getList(params).subscribe((reaponse) => {
-      this.courses = this.courses.concat(reaponse.body as ICourse[]);
-      this.totalCount = Number(reaponse.headers.get('x-total-count'));
-      this.loading = false;
-    });
+    return this.coursesService.getList(params).pipe(
+      tap((response) => {
+        this.courses$.next(response.body as ICourse[]);
+        this.totalCount$.next(Number(response.headers.get('X-Total-Count')));
+      }),
+      finalize(() => (this.loading = false)),
+    );
   }
 
   addCourse() {
@@ -95,11 +85,10 @@ export class CourseListComponent implements OnInit {
   }
 
   loadMore() {
-    this.getCourses({ loadMore: true });
+    this.getCourses({ ...this.searchParams, _limit: (this.searchParams._limit += 5) }).subscribe();
   }
 
   searchCourse(searchString: string) {
-    this.searchString = searchString;
-    this.getCourses({ search: true });
+    this.getCourses({ ...this.searchParams, q: searchString }).subscribe();
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IUser } from 'src/app/models/user';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,11 +9,11 @@ import { IUser } from 'src/app/models/user';
 export class AuthService {
   constructor(private httpClient: HttpClient) {}
 
-  login(email: string, password: string) {
+  login(email: string, password: string): Observable<IUser[]> {
     return this.httpClient.get<IUser[]>(`/api/users?email=${email}&password=${password}`);
   }
 
-  logout(): void {
+  logout() {
     localStorage.removeItem('auth_token');
   }
 
@@ -20,7 +21,7 @@ export class AuthService {
     return Boolean(localStorage.getItem('auth_token'));
   }
 
-  getUserInfo() {
+  getUserInfo(): Observable<IUser[]> {
     return this.httpClient.get<IUser[]>(`/api/users?token=${localStorage.getItem('auth_token')}`);
   }
 }
