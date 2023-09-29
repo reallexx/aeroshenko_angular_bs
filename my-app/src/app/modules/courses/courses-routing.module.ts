@@ -10,6 +10,7 @@ const routes: Routes = [
     path: '',
     component: CoursesComponent,
     canActivate: [canActivate],
+    canActivateChild: [canActivate],
     children: [
       { path: '', component: CourseListComponent },
       { path: 'new', component: CourseEditComponent },

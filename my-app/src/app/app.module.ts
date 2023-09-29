@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './modules/core/core.module';
 import { LoginPageModule } from './modules/login-page/login-page.module';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
+import { ErrorInterceptor } from './services/error.interceptor';
+import { LoaderInterceptor } from './services/loader/loader.interceptor';
 
 registerLocaleData(localeRu);
 
@@ -35,6 +37,9 @@ const modules = [
       useClass: AuthInterceptor,
       multi: true,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+
     MessageService,
   ],
   bootstrap: [AppComponent],

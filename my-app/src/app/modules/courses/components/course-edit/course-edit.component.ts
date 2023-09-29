@@ -28,7 +28,7 @@ export class CourseEditComponent implements OnInit {
     return this.course.name && this.course.description && this.course.duration && this.course.creationDate;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     let breadcrumbLabel = 'Новый курс';
 
     const { id } = this.activatedRoute.snapshot.params;
