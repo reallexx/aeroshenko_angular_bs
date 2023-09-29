@@ -1,5 +1,5 @@
 <div class="flex align-items-center justify-content-end">
   <p-avatar icon="pi pi-user" styleClass="mr-2"></p-avatar>
-  <span class="mr-2">{{ user }}</span>
+  <span class="mr-2">{{ (userInfo | async)?.[0]?.login  }}</span>
   <p-button label="Выход" icon="pi pi-sign-out" styleClass="p-button-secondary p-button-text" (click)="logout()"></p-button>
 </div>

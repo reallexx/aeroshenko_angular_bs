@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
-import { BehaviorSubject, finalize, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Subject, tap } from 'rxjs';
 import { ICourse } from 'src/app/models/course';
 import { IRequest } from 'src/app/models/request';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
@@ -18,6 +18,7 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 export class CourseListComponent implements OnInit {
   public courses$ = new Subject<ICourse[]>();
   public totalCount$ = new BehaviorSubject<number>(0);
+  public loading$ = new BehaviorSubject<boolean>(false);
 
   searchParams = {
     _page: 1,
@@ -28,7 +29,6 @@ export class CourseListComponent implements OnInit {
     // description_like: searchString,
     // q: this.searchString,
   };
-  loading = false;
 
   constructor(
     private coursesService: CoursesService,
@@ -48,13 +48,13 @@ export class CourseListComponent implements OnInit {
   }
 
   getCourses(params: IRequest = this.searchParams) {
-    this.loading = true;
+    this.loading$.next(true);
     return this.coursesService.getList(params).pipe(
       tap((response) => {
         this.courses$.next(response.body as ICourse[]);
         this.totalCount$.next(Number(response.headers.get('X-Total-Count')));
+        this.loading$.next(false);
       }),
-      finalize(() => (this.loading = false)),
     );
   }
 
