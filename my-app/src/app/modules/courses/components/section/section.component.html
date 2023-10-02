@@ -1,11 +1,6 @@
 <div class="section">
   <div class="flex align-items-center justify-content-between">
-    <div class="flex align-items-center">
-      <span class="p-input-icon-left mr-1">
-        <i class="pi pi-search"></i>
-        <input type="text" pInputText class="p-inputtext-sm" [(ngModel)]="searchString" (keyup)="searchCourse()" />
-      </span>
-    </div>
+    <app-search [(ngModel)]="searchString" (search)="searchCourse()"></app-search>
     <div class="flex align-items-center justify-content-end">
       <p-button label="Добавить курс" styleClass="p-button-sm" icon="pi pi-plus" (click)="addCourse()"></p-button>
     </div>

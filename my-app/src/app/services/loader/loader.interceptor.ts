@@ -9,6 +9,10 @@ export class LoaderInterceptor implements HttpInterceptor {
   constructor(private loaderService: LoaderService) {}
 
   intercept(req: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+    if (req.url.includes('/autors')) {
+      return next.handle(req);
+    }
+
     this.loaderService.show();
 
     return next.handle(req).pipe(

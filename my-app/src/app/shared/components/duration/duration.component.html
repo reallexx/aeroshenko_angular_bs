@@ -1,0 +1,10 @@
+<div class="flex align-items-center">
+  <div class="col-9 p-0 m-0">
+    <input [formControl]="control" pInputText />
+  </div>
+  <div class="col-3 p-0 m-0 p-pl-2" *ngIf="control.value && control.value <= 60000">
+    <div>
+      <div class="ml-3 info-text">{{ control.value | duration }}</div>
+    </div>
+  </div>
+</div>

@@ -2,7 +2,7 @@
   <div class="flex align-items-center justify-content-between">
     <h4 class="flex align-items-center ml-2 m-3">
       {{ course.name | uppercase }}
-      <i *ngIf="course.topRated" class="pi pi-star-fill ml-1 star"></i>
+      <i *ngIf="course.topRated === true" class="pi pi-star ml-1 star"></i>
     </h4>
 
     <div class="flex align-items-center justify-content-end info-text">
@@ -16,7 +16,7 @@
   <div class="flex align-items-center justify-content-between">
     <div class="ml-2 mb-2" style="font-size: 0.9rem">{{ course.description }}</div>
     <div class="flex align-items-center justify-content-end ml-4">
-      <p-button icon="pi pi-pencil mr-2" styleClass="p-button-text p-button-sm" (click)="editCourse(course)"></p-button>
+      <p-button icon="pi pi-pencil" styleClass="p-button-text p-button-sm" (click)="editCourse(course)"></p-button>
       <p-button icon="pi pi-trash" styleClass="p-button-text p-button-sm p-button-danger" (click)="deleteCourse(course.id)"></p-button>
     </div>
   </div>

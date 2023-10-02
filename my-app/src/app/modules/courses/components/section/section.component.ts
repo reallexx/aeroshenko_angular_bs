@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { debounceTime, distinctUntilChanged, filter, map, Subject, Subscription, pairwise } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { EventService } from 'src/app/services/event.service';
 
 @Component({
@@ -11,7 +11,6 @@ import { EventService } from 'src/app/services/event.service';
 export class SectionComponent implements OnInit, OnDestroy {
   constructor(private eventService: EventService) {}
 
-  search$ = new Subject<string>();
   searchString = '';
   subscriptions = new Subscription();
 
@@ -25,20 +24,6 @@ export class SectionComponent implements OnInit, OnDestroy {
         this.search.emit(this.searchString);
       }),
     );
-
-    this.subscriptions.add(
-      this.search$
-        .pipe(
-          debounceTime(250),
-          map((value) => value.trim()),
-          pairwise(),
-          filter(([prevValue, currentValue]) => (prevValue.length !== 0 && currentValue.length === 0) || currentValue.length >= 3),
-          distinctUntilChanged(),
-        )
-        .subscribe(([, currentValue]) => {
-          this.search.emit(currentValue);
-        }),
-    );
   }
 
   ngOnDestroy() {
@@ -46,7 +31,7 @@ export class SectionComponent implements OnInit, OnDestroy {
   }
 
   searchCourse() {
-    this.search$.next(this.searchString);
+    this.search.emit(this.searchString);
   }
 
   addCourse() {
