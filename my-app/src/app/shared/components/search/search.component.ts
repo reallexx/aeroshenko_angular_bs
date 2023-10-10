@@ -3,7 +3,7 @@ import { Component, EventEmitter, Injector, OnDestroy, OnInit, Output } from '@a
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { debounceTime, distinctUntilChanged, filter, map, pairwise, Subject, Subscription } from 'rxjs';
-import { ControlComponent } from '../control/control.component';
+import { CustomControlDirective } from '../../directives/custom-control.directive';
 
 @Component({
   selector: 'app-search',
@@ -12,15 +12,15 @@ import { ControlComponent } from '../control/control.component';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextModule],
   providers: [
-    ControlComponent,
+    CustomControlDirective,
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: ControlComponent,
+      useExisting: CustomControlDirective,
       multi: true,
     },
   ],
 })
-export class SearchComponent extends ControlComponent implements OnInit, OnDestroy {
+export class SearchComponent extends CustomControlDirective implements OnInit, OnDestroy {
   search$ = new Subject<string>();
   subscriptions = new Subscription();
 

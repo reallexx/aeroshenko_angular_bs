@@ -1,32 +1,25 @@
-import { CommonModule } from '@angular/common';
-import { Component, forwardRef, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Directive, forwardRef, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import {
   FormControl,
   FormControlDirective,
   FormControlName,
   FormGroupDirective,
-  FormsModule,
   NgControl,
   NgModel,
   NG_VALUE_ACCESSOR,
-  ReactiveFormsModule,
 } from '@angular/forms';
 import { ReplaySubject, takeUntil, tap } from 'rxjs';
 
-@Component({
-  selector: 'app-control',
-  standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
-  template: '',
+@Directive({
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ControlComponent),
+      useExisting: forwardRef(() => CustomControlDirective),
       multi: true,
     },
   ],
 })
-export class ControlComponent implements OnInit, OnDestroy {
+export class CustomControlDirective implements OnInit, OnDestroy {
   public control: FormControl = new FormControl();
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);

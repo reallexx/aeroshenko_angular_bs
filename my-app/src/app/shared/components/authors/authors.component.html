@@ -1,4 +1,5 @@
 <p-autoComplete
+  #autoComplete
   [(ngModel)]="selectedAutors"
   [suggestions]="($filteredAutors | async) || []"
   (completeMethod)="filterAutors($event)"
@@ -6,7 +7,6 @@
   [multiple]="true"
   [minLength]="1"
   [forceSelection]="true"
-  [ngClass]="{ 'ng-invalid': control.invalid }"
 >
   <ng-template let-item pTemplate="item">
     {{ item.name }}

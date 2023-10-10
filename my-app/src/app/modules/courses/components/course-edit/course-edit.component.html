@@ -8,29 +8,19 @@
       <div class="field col-9 p-0">
         <label for="name">Наименование *</label>
         <input id="name" formControlName="name" pInputText />
-        <div *ngIf="form.controls['name'].invalid && (form.controls['name'].touched || form.controls['name'].dirty)" class="p-error">
-          <div *ngIf="form.controls['name'].errors?.['maxlength']">
-            Максимальная длина {{ form.controls['name'].errors?.['maxlength'].requiredLength }} символов
-          </div>
+        <div *ngIf="name.invalid && (name.touched || name.dirty)" class="p-error">
+          <div *ngIf="name.hasError('required')">Поле обязательно к заполнению</div>
+          <div *ngIf="name.hasError('maxlength')">Максимальная длина {{ name.errors?.['maxlength'].requiredLength }} символов</div>
         </div>
       </div>
 
       <div class="field col-9 p-0">
         <label for="description">Описание *</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          pInputTextarea
-          [autoResize]="true"
-          class="ng-touched"
-          style="min-height: 6rem"
-        ></textarea>
-        <div
-          *ngIf="form.controls['description'].invalid && (form.controls['description'].touched || form.controls['description'].dirty)"
-          class="p-error"
-        >
-          <div *ngIf="form.controls['description'].errors?.['maxlength']">
-            Максимальная длина {{ form.controls['description'].errors?.['maxlength'].requiredLength }} символов
+        <textarea id="description" formControlName="description" pInputTextarea [autoResize]="true" style="min-height: 6rem"></textarea>
+        <div *ngIf="description.invalid && (description.touched || description.dirty)" class="p-error">
+          <div *ngIf="description.hasError('required')">Поле обязательно к заполнению</div>
+          <div *ngIf="description.hasError('maxlength')">
+            Максимальная длина {{ description.errors?.['maxlength'].requiredLength }} символов
           </div>
         </div>
       </div>
@@ -38,19 +28,11 @@
       <div class="field col-12 p-0">
         <label for="duration">Продолжительность *</label>
         <app-duration id="duration" formControlName="duration"></app-duration>
-        <div
-          *ngIf="form.controls['duration'].invalid && (form.controls['duration'].touched || form.controls['duration'].dirty)"
-          class="p-error"
-        >
-          <div *ngIf="!form.controls['duration'].errors?.['min'] && form.controls['duration'].errors?.['pattern']">
-            Можно вводить только цифры
-          </div>
-          <div *ngIf="form.controls['duration'].errors?.['min']">
-            Минимальное значение {{ form.controls['duration'].errors?.['min']?.min }}
-          </div>
-          <div *ngIf="form.controls['duration'].errors?.['max']">
-            Минимальное значение {{ form.controls['duration'].errors?.['max']?.max }}
-          </div>
+        <div *ngIf="duration.invalid && (duration.touched || duration.dirty)" class="p-error">
+          <div *ngIf="duration.hasError('required')">Поле обязательно к заполнению</div>
+          <div *ngIf="!duration.hasError('min') && duration.hasError('pattern')">Можно вводить только цифры</div>
+          <div *ngIf="duration.hasError('min')">Минимальное значение {{ duration.errors?.['min']?.min }}</div>
+          <div *ngIf="duration.hasError('max')">Минимальное значение {{ duration.errors?.['max']?.max }}</div>
         </div>
       </div>
 
@@ -64,12 +46,9 @@
           dateFormat="dd/mm/yy"
           appendTo="body"
         ></p-calendar>
-        <div
-          *ngIf="form.controls['creationDate'].invalid && (form.controls['creationDate'].touched || form.controls['creationDate'].dirty)"
-          class="p-error"
-        >
-          <div *ngIf="form.controls['creationDate'].errors?.['required'] || form.controls['creationDate'].errors?.['pattern']">
-            Дата должна быть в формате ДД/ММ/ГГГГ
+        <div *ngIf="creationDate.invalid && (creationDate.touched || creationDate.dirty)" class="p-error">
+          <div *ngIf="creationDate.hasError('required') || creationDate.hasError('pattern')">
+            Дата обязательна к заполнению и должна быть в формате ДД/ММ/ГГГГ
           </div>
         </div>
       </div>
@@ -77,11 +56,8 @@
       <div class="field col-9 p-0">
         <label for="authors">Авторы *</label>
         <app-authors id="authors" formControlName="authors"></app-authors>
-        <div
-          *ngIf="form.controls['authors'].invalid && (form.controls['authors'].touched || form.controls['authors'].dirty)"
-          class="p-error"
-        >
-          <div *ngIf="form.controls['authors'].errors?.['required']">Должен быть указан хотя бы один автор</div>
+        <div *ngIf="authors.invalid && (authors.touched || authors.dirty)" class="p-error">
+          <div *ngIf="authors.hasError('required')">Должен быть указан хотя бы один автор</div>
         </div>
       </div>
     </div>

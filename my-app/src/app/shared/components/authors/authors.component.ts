@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { BehaviorSubject, map, Subject, Subscription } from 'rxjs';
 import { IAutor } from 'src/app/models/autor';
 import { AutorsService } from 'src/app/services/autors.service';
-import { ControlComponent } from '../control/control.component';
+import { CustomControlDirective } from '../../directives/custom-control.directive';
 
 @Component({
   selector: 'app-authors',
@@ -14,15 +14,17 @@ import { ControlComponent } from '../control/control.component';
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule, AutoCompleteModule],
   providers: [
-    ControlComponent,
+    CustomControlDirective,
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: ControlComponent,
+      useExisting: CustomControlDirective,
       multi: true,
     },
   ],
 })
-export class AuthorsComponent extends ControlComponent implements OnInit, OnDestroy {
+export class AuthorsComponent extends CustomControlDirective implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('autoComplete', { static: true, read: ElementRef }) autoComplete: ElementRef = {} as ElementRef;
+
   public $filteredAutors = new Subject<IAutor[]>();
   public $loading = new BehaviorSubject<boolean>(false);
 
@@ -47,12 +49,35 @@ export class AuthorsComponent extends ControlComponent implements OnInit, OnDest
                 this.selectedAutors = selectedAutors;
                 this.$loading.next(false);
               });
-          } else {
-            this.subscriptions.unsubscribe();
           }
         }
       }),
     );
+  }
+
+  ngAfterViewInit() {
+    const autoCompleteElement = this.autoComplete.nativeElement as HTMLElement;
+
+    const classObserver = new MutationObserver(() => {
+      const classList = Array.from(autoCompleteElement.classList);
+
+      if (classList.includes('ng-touched')) {
+        this.control.markAsTouched();
+      }
+      if (classList.includes('ng-dirty')) {
+        this.control.markAsDirty();
+      }
+    });
+
+    classObserver.observe(autoCompleteElement, { attributes: true });
+
+    this.control.statusChanges.subscribe((status) => {
+      if (status === 'INVALID') {
+        autoCompleteElement.classList.add('ng-invalid');
+      } else {
+        autoCompleteElement.classList.remove('ng-invalid');
+      }
+    });
   }
 
   override ngOnDestroy(): void {
@@ -71,11 +96,13 @@ export class AuthorsComponent extends ControlComponent implements OnInit, OnDest
 
   filterAutors(event: { originalEvent: Event; query: string }) {
     const query = event.query;
-    this.autorsService
-      .getList({ name_like: query })
-      .pipe(map((response) => response.body as IAutor[]))
-      .subscribe((filteredAutors) => {
-        this.$filteredAutors.next(filteredAutors);
-      });
+    this.subscriptions.add(
+      this.autorsService
+        .getList({ name_like: query })
+        .pipe(map((response) => response.body as IAutor[]))
+        .subscribe((filteredAutors) => {
+          this.$filteredAutors.next(filteredAutors);
+        }),
+    );
   }
 }

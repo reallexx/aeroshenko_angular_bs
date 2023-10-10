@@ -21,7 +21,7 @@ export class LoginPageComponent implements OnDestroy {
 
   login(formData: NgForm) {
     this.subscriptions.add(
-      this.authService.login(formData.controls['email'].value, formData.controls['password'].value).subscribe({
+      this.authService.login(formData.value['email'], formData.value['password']).subscribe({
         next: (data) => {
           if (data.length === 0) {
             this.messageService.add({ severity: 'error', summary: 'Ошибка', detail: 'Пользователь не найден' });
