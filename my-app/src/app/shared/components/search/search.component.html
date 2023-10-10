@@ -1,0 +1,7 @@
+<div class="flex align-items-center">
+  <span class="p-input-icon-left p-input-icon-right mr-1">
+    <i class="pi pi-search"></i>
+    <input [formControl]="control" type="text" pInputText class="p-inputtext-sm" placeholder="Поиск" (keyup)="searchCourse()" />
+    <i class="pi pi-times" style="cursor: pointer" (click)="clearSearch()"></i>
+  </span>
+</div>

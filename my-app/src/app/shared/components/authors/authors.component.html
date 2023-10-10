@@ -1,1 +1,18 @@
-<p>authors works!</p>
+<p-autoComplete
+  #autoComplete
+  [(ngModel)]="selectedAutors"
+  [suggestions]="($filteredAutors | async) || []"
+  (completeMethod)="filterAutors($event)"
+  field="name"
+  [multiple]="true"
+  [minLength]="1"
+  [forceSelection]="true"
+>
+  <ng-template let-item pTemplate="item">
+    {{ item.name }}
+  </ng-template>
+  <ng-template let-item pTemplate="selectedItem">
+    {{ item.name }}
+    <ng-container *ngIf="!item.name && $loading"><i class="pi pi-spinner pi-spin"></i></ng-container>
+  </ng-template>
+</p-autoComplete>

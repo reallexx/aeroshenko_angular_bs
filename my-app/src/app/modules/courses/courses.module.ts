@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
@@ -13,6 +13,8 @@ import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import { EventService } from 'src/app/services/event.service';
 import { AuthorsComponent } from 'src/app/shared/components/authors/authors.component';
 import { BreadcrumbsComponent } from 'src/app/shared/components/breadcrumbs/breadcrumbs.component';
+import { DurationComponent } from 'src/app/shared/components/duration/duration.component';
+import { SearchComponent } from 'src/app/shared/components/search/search.component';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 import { OrderByPipe } from 'src/app/shared/pipes/order-by.pipe';
 import { DurationPipe } from '../../shared/pipes/duration.pipe';
@@ -28,6 +30,7 @@ import { CourseBorderDirective } from './directives/course-border.directive';
 const modules = [
   CommonModule,
   FormsModule,
+  ReactiveFormsModule,
   ButtonModule,
   InputTextModule,
   ConfirmDialogModule,
@@ -38,7 +41,7 @@ const modules = [
   CoursesRoutingModule,
 ];
 
-const standaloneComponents = [AuthorsComponent, BreadcrumbsComponent];
+const standaloneComponents = [AuthorsComponent, BreadcrumbsComponent, DurationComponent, SearchComponent];
 
 const components = [CourseListComponent, CourseItemComponent, SectionComponent, CourseEditComponent, ItemsNotFoundComponent];
 

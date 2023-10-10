@@ -1,65 +1,75 @@
 <div class="grid">
-  <div class="col-6 col-offset-3">
+  <div class="col-6 p-0 col-offset-3">
     <h4 class="mb-1">{{ caption }}</h4>
   </div>
 
   <div class="col-6 col-offset-3">
-    <div class="formgrid grid p-fluid content py-2">
-      <div class="field col-9">
+    <div class="formgrid grid p-fluid content p-4" [formGroup]="form">
+      <div class="field col-9 p-0">
         <label for="name">Наименование *</label>
-        <input id="name" [(ngModel)]="course.name" pInputText />
+        <input id="name" formControlName="name" pInputText />
+        <div *ngIf="name.invalid && (name.touched || name.dirty)" class="p-error">
+          <div *ngIf="name.hasError('required')">Поле обязательно к заполнению</div>
+          <div *ngIf="name.hasError('maxlength')">Максимальная длина {{ name.errors?.['maxlength'].requiredLength }} символов</div>
+        </div>
       </div>
 
-      <div class="field col-9">
+      <div class="field col-9 p-0">
         <label for="description">Описание *</label>
-        <textarea
-          id="description"
-          [(ngModel)]="course.description"
-          pInputTextarea
-          [autoResize]="true"
-          class="ng-touched"
-          style="min-height: 6rem"
-        ></textarea>
-      </div>
-
-      <div class="col-12 p-0">
-        <div class="flex align-items-center">
-          <div class="field col-9">
-            <label for="duration">Продолжительность *</label>
-            <p-inputNumber id="duration" [(ngModel)]="course.duration" [showButtons]="true" [useGrouping]="false" [min]="0" [max]="60000">
-            </p-inputNumber>
-          </div>
-          <div class="col-3" *ngIf="course.duration && course.duration <= 60000">
-            <div>
-              <div class="mr-2 pt-2 info-text">{{ course.duration | duration }}</div>
-            </div>
+        <textarea id="description" formControlName="description" pInputTextarea [autoResize]="true" style="min-height: 6rem"></textarea>
+        <div *ngIf="description.invalid && (description.touched || description.dirty)" class="p-error">
+          <div *ngIf="description.hasError('required')">Поле обязательно к заполнению</div>
+          <div *ngIf="description.hasError('maxlength')">
+            Максимальная длина {{ description.errors?.['maxlength'].requiredLength }} символов
           </div>
         </div>
       </div>
 
-      <div class="field col-9">
+      <div class="field col-12 p-0">
+        <label for="duration">Продолжительность *</label>
+        <app-duration id="duration" formControlName="duration"></app-duration>
+        <div *ngIf="duration.invalid && (duration.touched || duration.dirty)" class="p-error">
+          <div *ngIf="duration.hasError('required')">Поле обязательно к заполнению</div>
+          <div *ngIf="!duration.hasError('min') && duration.hasError('pattern')">Можно вводить только цифры</div>
+          <div *ngIf="duration.hasError('min')">Минимальное значение {{ duration.errors?.['min']?.min }}</div>
+          <div *ngIf="duration.hasError('max')">Минимальное значение {{ duration.errors?.['max']?.max }}</div>
+        </div>
+      </div>
+
+      <div class="field col-9 p-0">
         <label for="creationDate">Дата *</label>
         <p-calendar
           id="creationDate"
-          [(ngModel)]="course.creationDate"
+          formControlName="creationDate"
           [showIcon]="true"
-          dateFormat="dd.mm.yy"
           [firstDayOfWeek]="1"
+          dateFormat="dd/mm/yy"
           appendTo="body"
         ></p-calendar>
+        <div *ngIf="creationDate.invalid && (creationDate.touched || creationDate.dirty)" class="p-error">
+          <div *ngIf="creationDate.hasError('required') || creationDate.hasError('pattern')">
+            Дата обязательна к заполнению и должна быть в формате ДД/ММ/ГГГГ
+          </div>
+        </div>
       </div>
 
-      <div class="field col-9"><app-authors></app-authors></div>
+      <div class="field col-9 p-0">
+        <label for="authors">Авторы *</label>
+        <app-authors id="authors" formControlName="authors"></app-authors>
+        <div *ngIf="authors.invalid && (authors.touched || authors.dirty)" class="p-error">
+          <div *ngIf="authors.hasError('required')">Должен быть указан хотя бы один автор</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="col-6 col-offset-3 flex justify-content-end gap-2 pt-3">
+  <div class="col-6 col-offset-3 flex justify-content-end gap-2 px-0 pt-3">
     <p-button
       label="Отмена"
       styleClass="p-button-sm p-button-secondary p-button-outlined"
       icon="pi pi-times"
       (click)="cancelAction()"
     ></p-button>
-    <p-button label="Сохранить" [disabled]="!valid" styleClass="p-button-sm" icon="pi pi-check" (click)="saveCourse()"></p-button>
+    <p-button label="Сохранить" [disabled]="!form.valid" styleClass="p-button-sm" icon="pi pi-check" (click)="saveCourse()"></p-button>
   </div>
 </div>
