@@ -1,3 +1,3 @@
 export interface IRequest {
-  [param: string]: string | number | boolean | readonly (string | number | boolean)[];
+  [param: string]: string | number | boolean | (string | number | boolean)[];
 }

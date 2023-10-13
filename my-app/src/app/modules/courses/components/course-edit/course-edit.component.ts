@@ -1,11 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { Actions, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { take } from 'rxjs';
 import { IAutor } from 'src/app/models/autor';
-import { ICourse } from 'src/app/models/course';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
-import { CoursesService } from 'src/app/services/courses.service';
+import { selectRouteParam } from 'src/app/store';
+import {
+  createCourse,
+  createCourseSuccess,
+  getCourseById,
+  getCourseByIdSuccess,
+  updateCourse,
+  updateCourseSuccess,
+} from 'src/app/store/actions/course.actions';
+import { selectCurrentCourse, selectCurrentCourseId } from 'src/app/store/selectors/course.selectors';
 
 @Component({
   selector: 'app-course-edit',
@@ -15,8 +25,7 @@ import { CoursesService } from 'src/app/services/courses.service';
 export class CourseEditComponent implements OnInit {
   caption = 'Добавление курса';
   mode = 'add';
-  courseId = Number(this.activatedRoute.snapshot.params['id']);
-  course: ICourse = {} as ICourse;
+  id: number | undefined;
 
   form: FormGroup = this.formBuilder.group({
     name: ['', [Validators.required, Validators.maxLength(50)]],
@@ -47,11 +56,11 @@ export class CourseEditComponent implements OnInit {
   }
 
   constructor(
-    private coursesService: CoursesService,
     private breadcrumbsService: BreadcrumbsService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private store: Store,
+    private actions$: Actions,
   ) {}
 
   ngOnInit() {
@@ -61,22 +70,35 @@ export class CourseEditComponent implements OnInit {
       items: [{ label: breadcrumbLabel }],
     };
 
-    if (this.courseId) {
-      this.caption = 'Редактирование курса';
-      this.mode = 'edit';
-      this.coursesService
-        .getItemById(this.courseId)
-        .pipe(take(1))
-        .subscribe((data) => {
-          data.creationDate = new Date(data.creationDate);
-          this.form.patchValue(data);
-          this.course = data;
-          breadcrumbData.items[0].label = data.name;
+    this.store.select(selectRouteParam('id')).subscribe((id) => {
+      if (id) {
+        this.id = Number(id);
+        this.caption = 'Редактирование курса';
+        this.mode = 'edit';
+
+        this.actions$.pipe(ofType(getCourseByIdSuccess), take(1)).subscribe(({ course }) => {
+          this.form.patchValue(course);
+          breadcrumbData.items[0].label = course.name;
           this.breadcrumbsService.data = breadcrumbData;
         });
-    } else {
-      this.breadcrumbsService.data = breadcrumbData;
-    }
+
+        this.store.dispatch(getCourseById({ id: this.id }));
+      } else {
+        this.breadcrumbsService.data = breadcrumbData;
+      }
+    });
+
+    // if use adapter example
+    // course
+    this.store.select(selectCurrentCourseId).subscribe((id) => {
+      console.log('selectedId =', id);
+      if (id) {
+        this.store.select(selectCurrentCourse).subscribe((course) => {
+          console.log('currentCourse =', course);
+        });
+      }
+    });
+    //
   }
 
   cancelAction() {
@@ -86,19 +108,16 @@ export class CourseEditComponent implements OnInit {
   saveCourse() {
     if (!this.form.valid) return;
 
-    const navigateToCourses = () => this.router.navigate(['/courses']);
+    const authors = this.form.value['authors']?.map((item: IAutor) => item.id);
+    const course = { ...this.form.value, authors };
 
-    if (this.form.value['authors']) {
-      this.form.value['authors'] = this.form.value['authors'].map((item: IAutor) => item.id);
-    }
+    const succesAction = this.mode === 'add' ? createCourseSuccess : updateCourseSuccess;
+    const dispatchAction = this.mode === 'add' ? createCourse({ course }) : updateCourse({ id: Number(this.id), course });
 
-    if (this.mode === 'add') {
-      this.coursesService.createItem(this.form.value).pipe(take(1)).subscribe(navigateToCourses);
-    } else {
-      this.coursesService
-        .updateItem(this.courseId, { ...this.course, ...this.form.value })
-        .pipe(take(1))
-        .subscribe(navigateToCourses);
-    }
+    this.actions$.pipe(ofType(succesAction), take(1)).subscribe(() => {
+      this.router.navigate(['/courses']);
+    });
+
+    this.store.dispatch(dispatchAction);
   }
 }
