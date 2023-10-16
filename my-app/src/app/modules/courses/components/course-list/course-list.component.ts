@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from 'primeng/api';
-import { take } from 'rxjs';
 import { ICourse } from 'src/app/models/course';
 import { IRequest } from 'src/app/models/request';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
 import { EventService } from 'src/app/services/event.service';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
-import { deleteCourse, deleteCourseSuccess, getCourses, selectCourse } from 'src/app/store/actions/course.actions';
+import { deleteCourse, getCourses } from 'src/app/store/actions/course.actions';
 import { selectAllCourses, selectCourses, selectLoading, selectTotalCount } from 'src/app/store/selectors/course.selectors';
 
 @Component({
@@ -57,18 +56,10 @@ export class CourseListComponent implements OnInit {
 
   addCourse() {
     this.router.navigate(['courses/new']);
-
-    // if use adapter example
-    this.store.dispatch(selectCourse({ id: null }));
-    //
   }
 
   editCourse(course: ICourse) {
     this.router.navigate(['courses', course.id]);
-
-    // if use adapter example
-    this.store.dispatch(selectCourse({ id: course.id }));
-    //
   }
 
   deleteCourse(id: number) {
@@ -82,10 +73,6 @@ export class CourseListComponent implements OnInit {
       acceptIcon: 'pi pi-trash',
       rejectIcon: 'pi pi-times',
       accept: () => {
-        this.actions$.pipe(ofType(deleteCourseSuccess), take(1)).subscribe(() => {
-          this.eventService.clearFiltersEvent.emit();
-        });
-
         this.store.dispatch(deleteCourse({ id }));
       },
     });

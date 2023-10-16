@@ -11,6 +11,5 @@ export const selectCourse = createSelector(selectCoursesState, (state) => state.
 // if use adapter
 export const selectAllCourses = createSelector(selectCoursesState, fromCourse.selectAll);
 export const selectCourseEntities = createSelector(selectCoursesState, fromCourse.selectEntities);
-export const selectCurrentCourseId = createSelector(selectCoursesState, fromCourse.getSelectedId);
-export const selectCurrentCourse = createSelector(selectCourseEntities, selectCurrentCourseId, (entities, id) => id && entities[id]);
+export const selectCourseById = (id: string) => createSelector(selectCourseEntities, (entities) => entities[id]);
 //

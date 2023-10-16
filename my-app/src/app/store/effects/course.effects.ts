@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ICourse } from 'src/app/models/course';
 import { CoursesService } from 'src/app/services/courses.service';
+import { EventService } from 'src/app/services/event.service';
 import * as fromCourseActions from '../actions/course.actions';
 
 @Injectable()
@@ -51,6 +53,9 @@ export class CourseEffects {
               course,
             }),
           ),
+          tap(() => {
+            this.router.navigate(['/courses']);
+          }),
           catchError((error) => of(fromCourseActions.createCourseFailure({ error }))),
         ),
       ),
@@ -67,6 +72,9 @@ export class CourseEffects {
               course,
             }),
           ),
+          tap(() => {
+            this.router.navigate(['/courses']);
+          }),
           catchError((error) => of(fromCourseActions.updateCourseFailure({ error }))),
         ),
       ),
@@ -79,11 +87,19 @@ export class CourseEffects {
       switchMap(({ id }) =>
         this.coursesService.removeItem(id).pipe(
           map(() => fromCourseActions.deleteCourseSuccess({ id })),
+          tap(() => {
+            this.eventService.clearFiltersEvent.emit();
+          }),
           catchError((error) => of(fromCourseActions.deleteCourseFailure({ error }))),
         ),
       ),
     ),
   );
 
-  constructor(private actions$: Actions, private coursesService: CoursesService) {}
+  constructor(
+    private actions$: Actions,
+    private coursesService: CoursesService,
+    private router: Router,
+    private eventService: EventService,
+  ) {}
 }

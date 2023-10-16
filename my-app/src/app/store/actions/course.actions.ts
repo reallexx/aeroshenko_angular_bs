@@ -31,7 +31,3 @@ export const deleteCourse = createAction('[Course] Delete Course', props<{ id: n
 export const deleteCourseSuccess = createAction('[Course] Delete Course Success', props<{ id: number }>());
 
 export const deleteCourseFailure = createAction('[Course] Delete Course Failure', props<{ error: unknown }>());
-
-// if use adapter
-export const selectCourse = createAction('[Course] Select Course', props<{ id: number | null }>());
-//

@@ -84,8 +84,6 @@ export const reducer = createReducer(
   })),
 
   // if use adapter
-  on(fromCourseActions.selectCourse, (state, { id }) => ({ ...state, selectedId: id })),
-
   on(fromCourseActions.getCoursesSuccess, (state, { courses, totalCount }) =>
     adapter.setAll(courses, { ...state, totalCount, loading: false }),
   ),
@@ -96,6 +94,5 @@ export const reducer = createReducer(
 );
 
 // if use adapter
-export const getSelectedId = (state: State) => state.selectedId;
 export const { selectAll, selectEntities, selectIds } = adapter.getSelectors();
 //

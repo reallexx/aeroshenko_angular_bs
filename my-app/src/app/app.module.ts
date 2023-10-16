@@ -17,6 +17,7 @@ import { CoreModule } from './modules/core/core.module';
 import { LoginPageModule } from './modules/login-page/login-page.module';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
 import { ErrorInterceptor } from './services/error.interceptor';
+import { EventService } from './services/event.service';
 import { LoaderInterceptor } from './services/loader/loader.interceptor';
 import { reducers } from './store';
 import { CourseEffects } from './store/effects/course.effects';
@@ -56,6 +57,7 @@ const store = [
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
 
     MessageService,
+    EventService,
   ],
   bootstrap: [AppComponent],
 })
