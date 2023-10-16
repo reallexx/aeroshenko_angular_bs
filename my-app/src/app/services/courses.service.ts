@@ -15,8 +15,7 @@ export class CoursesService {
   }
 
   createItem(course: ICourse): Observable<ICourse> {
-    course.id = Math.floor(Math.random() * 10 ** 10);
-    return this.httpClient.post<ICourse>(`/api/courses`, course);
+    return this.httpClient.post<ICourse>(`/api/courses`, { ...course, id: Math.floor(Math.random() * 10 ** 10) });
   }
 
   getItemById(id: number): Observable<ICourse> {

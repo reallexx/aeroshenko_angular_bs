@@ -32,7 +32,7 @@
           <div *ngIf="duration.hasError('required')">Поле обязательно к заполнению</div>
           <div *ngIf="!duration.hasError('min') && duration.hasError('pattern')">Можно вводить только цифры</div>
           <div *ngIf="duration.hasError('min')">Минимальное значение {{ duration.errors?.['min']?.min }}</div>
-          <div *ngIf="duration.hasError('max')">Минимальное значение {{ duration.errors?.['max']?.max }}</div>
+          <div *ngIf="duration.hasError('max')">Максимальное значение {{ duration.errors?.['max']?.max }}</div>
         </div>
       </div>
 

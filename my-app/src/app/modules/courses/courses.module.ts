@@ -53,6 +53,6 @@ const pipes = [DurationPipe, OrderByPipe, FilterPipe];
   declarations: [CoursesComponent, ...components, ...directives],
   imports: [...modules, ...pipes, ...standaloneComponents],
   exports: [CoursesComponent],
-  providers: [ConfirmationService, BreadcrumbsService, EventService],
+  providers: [ConfirmationService, BreadcrumbsService],
 })
 export class CoursesModule {}

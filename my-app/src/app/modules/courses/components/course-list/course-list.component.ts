@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Actions } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { ConfirmationService } from 'primeng/api';
-import { BehaviorSubject, Subject, tap } from 'rxjs';
 import { ICourse } from 'src/app/models/course';
 import { IRequest } from 'src/app/models/request';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
-import { CoursesService } from 'src/app/services/courses.service';
 import { EventService } from 'src/app/services/event.service';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
+import { deleteCourse, getCourses } from 'src/app/store/actions/course.actions';
+import { selectAllCourses, selectCourses, selectLoading, selectTotalCount } from 'src/app/store/selectors/course.selectors';
 
 @Component({
   selector: 'app-course-list',
@@ -16,26 +18,24 @@ import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
   providers: [FilterPipe],
 })
 export class CourseListComponent implements OnInit {
-  public courses$ = new Subject<ICourse[]>();
-  public totalCount$ = new BehaviorSubject<number>(0);
-  public loading$ = new BehaviorSubject<boolean>(false);
+  loading$ = this.store.select(selectLoading);
+  courses$ = this.store.select(selectCourses);
+  totalCount$ = this.store.select(selectTotalCount);
 
-  searchParams = {
+  searchParams: IRequest = {
     _page: 1,
     _limit: 5,
     _sort: 'creationDate',
     _order: 'asc',
-    // name_like: searchString,
-    // description_like: searchString,
-    // q: this.searchString,
   };
 
   constructor(
-    private coursesService: CoursesService,
     private confirmationService: ConfirmationService,
     private breadcrumbsService: BreadcrumbsService,
     private router: Router,
     private eventService: EventService,
+    private store: Store,
+    private actions$: Actions,
   ) {}
 
   ngOnInit() {
@@ -44,18 +44,14 @@ export class CourseListComponent implements OnInit {
       items: [],
     };
 
-    this.getCourses().subscribe();
-  }
+    this.store.dispatch(getCourses({ params: this.searchParams }));
 
-  getCourses(params: IRequest = this.searchParams) {
-    this.loading$.next(true);
-    return this.coursesService.getList(params).pipe(
-      tap((response) => {
-        this.courses$.next(response.body as ICourse[]);
-        this.totalCount$.next(Number(response.headers.get('X-Total-Count')));
-        this.loading$.next(false);
-      }),
-    );
+    // if use adapter example
+    // courses$
+    this.store.select(selectAllCourses).subscribe((courses) => {
+      console.log('allCourses =', courses);
+    });
+    //
   }
 
   addCourse() {
@@ -77,18 +73,17 @@ export class CourseListComponent implements OnInit {
       acceptIcon: 'pi pi-trash',
       rejectIcon: 'pi pi-times',
       accept: () => {
-        this.coursesService.removeItem(id).subscribe(() => {
-          this.eventService.clearFiltersEvent.emit();
-        });
+        this.store.dispatch(deleteCourse({ id }));
       },
     });
   }
 
   loadMore() {
-    this.getCourses({ ...this.searchParams, _limit: (this.searchParams._limit += 5) }).subscribe();
+    this.searchParams = { ...this.searchParams, _limit: Number(this.searchParams['_limit']) + 5 };
+    this.store.dispatch(getCourses({ params: this.searchParams }));
   }
 
   searchCourse(searchString: string) {
-    this.getCourses({ ...this.searchParams, q: searchString }).subscribe();
+    this.store.dispatch(getCourses({ params: { ...this.searchParams, q: searchString } }));
   }
 }
