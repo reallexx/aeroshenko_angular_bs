@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ConfirmationService } from 'primeng/api';
 import { ICourse } from 'src/app/models/course';
 import { IRequest } from 'src/app/models/request';
 import { BreadcrumbsService } from 'src/app/services/breadcrumbs.service';
-import { EventService } from 'src/app/services/event.service';
 import { FilterPipe } from 'src/app/shared/pipes/filter.pipe';
 import { deleteCourse, getCourses } from 'src/app/store/actions/course.actions';
 import { selectAllCourses, selectCourses, selectLoading, selectTotalCount } from 'src/app/store/selectors/course.selectors';
@@ -33,9 +31,7 @@ export class CourseListComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private breadcrumbsService: BreadcrumbsService,
     private router: Router,
-    private eventService: EventService,
     private store: Store,
-    private actions$: Actions,
   ) {}
 
   ngOnInit() {

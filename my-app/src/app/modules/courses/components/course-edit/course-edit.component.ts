@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { map, of, switchMap, take, tap } from 'rxjs';
 import { IAutor } from 'src/app/models/autor';
@@ -53,7 +52,6 @@ export class CourseEditComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private store: Store,
-    private actions$: Actions,
   ) {}
 
   ngOnInit() {
