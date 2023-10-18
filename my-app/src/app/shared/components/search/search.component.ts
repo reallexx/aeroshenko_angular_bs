@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Injector, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { debounceTime, distinctUntilChanged, filter, map, pairwise, Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, pairwise, Subscription } from 'rxjs';
 import { CustomControlDirective } from '../../directives/custom-control.directive';
 
 @Component({
@@ -21,7 +21,6 @@ import { CustomControlDirective } from '../../directives/custom-control.directiv
   ],
 })
 export class SearchComponent extends CustomControlDirective implements OnInit, OnDestroy {
-  search$ = new Subject<string>();
   subscriptions = new Subscription();
 
   @Output() search = new EventEmitter<string>();
@@ -32,9 +31,17 @@ export class SearchComponent extends CustomControlDirective implements OnInit, O
 
   override ngOnInit(): void {
     super.ngOnInit();
+  }
 
+  override ngOnDestroy(): void {
+    super.ngOnDestroy();
+
+    this.subscriptions.unsubscribe();
+  }
+
+  searchCourse() {
     this.subscriptions.add(
-      this.search$
+      this.control.valueChanges
         .pipe(
           debounceTime(250),
           map((value) => value.trim()),
@@ -46,16 +53,6 @@ export class SearchComponent extends CustomControlDirective implements OnInit, O
           this.search.emit(currentValue);
         }),
     );
-  }
-
-  override ngOnDestroy(): void {
-    super.ngOnDestroy();
-
-    this.subscriptions.unsubscribe();
-  }
-
-  searchCourse() {
-    this.search.emit(this.control.value);
   }
 
   clearSearch() {

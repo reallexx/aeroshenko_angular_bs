@@ -9,7 +9,7 @@ export interface State {
   error: unknown | null;
 }
 
-const initialState: State = {
+export const initialState: State = {
   users: [],
   error: null,
 };
